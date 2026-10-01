@@ -1,6 +1,6 @@
 # AuraTech Design System (DESIGN.md)
 
-Design system of the **AuraTech — Official Google Hardware Partner** storefront. Upload this file to your own Stitch project (`upload_design_md` → `create_design_system_from_design_md`) so every new screen matches the existing web in `templates/`.
+Design system of the **AuraTech — Official Google Hardware Partner** storefront. Reference copy of the design system `assets/5733f6b3f4ab4766ab180fc8f0b95aea` (AuraTech Hardware) already created in the shared Stitch project `16569938020139710589`, which Antigravity reuses so every new screen matches the existing web in `templates/`. You don't need to upload it.
 
 ## Brand & Tone
 - Minimalist, premium consumer-hardware retail (Google Store–like). Bright, airy, generous whitespace, soft 1px borders, no heavy shadows, no gradients.

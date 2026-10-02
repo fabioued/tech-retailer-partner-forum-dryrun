@@ -22,7 +22,7 @@ Read `templates/poll.html` (lines 1–165 and 275–295) and `templates/index.ht
 ### Step 1.2: Call Google Stitch MCP (`generate_screen_from_text`)
 Call `generate_screen_from_text` using the Stitch project for this repository:
 
-- **`projectId`**: `"16569938020139710589"`
+- **`projectId`**: `"7029395595404356083"`
 - **`designSystem`**: `"assets/5733f6b3f4ab4766ab180fc8f0b95aea"` (AuraTech Hardware)
 - **`deviceType`**: `"DESKTOP"`
 - **`modelId`**: `"GEMINI_3_8_FLASH"`

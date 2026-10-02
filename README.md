@@ -24,7 +24,7 @@ Brownfield demo for **Google Antigravity**. You start from an existing web app: 
 >
 > **One command:** `./configure.sh` asks for your GCP project ID, stores it **outside the repo** in `~/.auratech/<repo>.env` and fills the placeholder. Re-run it any time; after a `git reset` it refills without questions.
 >
-> **Jira and Stitch need no configuration**: Antigravity finds your ticket through your Jira MCP, and the repo already points to the shared Stitch project [`16569938020139710589`](https://stitch.withgoogle.com/projects/16569938020139710589) with its design system `assets/5733f6b3f4ab4766ab180fc8f0b95aea` (AuraTech Hardware). Ask the owner to share that Stitch project with your Google account.
+> **Jira and Stitch need no configuration**: Antigravity finds your ticket through your Jira MCP, and the repo already points to the shared Stitch project [`7029395595404356083`](https://stitch.withgoogle.com/projects/7029395595404356083) with its design system `assets/5733f6b3f4ab4766ab180fc8f0b95aea` (AuraTech Hardware). Ask the owner to share that Stitch project with your Google account.
 >
 > Antigravity is instructed to **ask you** for any placeholder that is still empty. It never stores tokens or API keys in the repo.
 
@@ -73,7 +73,7 @@ Official guide: [Get started with the Atlassian Rovo MCP server](https://support
    }
    ```
    Replace `<YOUR_STITCH_API_KEY>` **only in your local `mcp_config.json`**. Never put it in this repo.
-3. Refresh the MCP servers and test: *"List my Stitch projects."* You should see the shared project `16569938020139710589` (ask the owner to share it with you if not).
+3. Refresh the MCP servers and test: *"List my Stitch projects."* You should see the shared project `7029395595404356083` (ask the owner to share it with you if not).
 
 Official guide: [Stitch MCP setup](https://stitch.withgoogle.com/docs/mcp/setup).
 
@@ -108,7 +108,7 @@ Do not continue until `check-cloud.sh` prints **🎉 All checks passed**.
 Useful docs: [Cloud Run deploy from source](https://cloud.google.com/run/docs/deploying-source-code) · [Public access / invoker IAM check](https://cloud.google.com/run/docs/securing/managing-access#invoker_check) · [Vertex AI image generation](https://cloud.google.com/vertex-ai/generative-ai/docs/image/overview).
 
 ## Step 5: Deploy the existing webpage to Cloud Run (baseline)
-The existing storefront and Live Role Poll already live as screens in the shared Stitch project `16569938020139710589`, with the AuraTech design system Antigravity will reuse for the new feature. Nothing to create in Stitch. Ask Antigravity:
+The existing storefront and Live Role Poll already live as screens in the shared Stitch project `7029395595404356083`, with the AuraTech design system Antigravity will reuse for the new feature. Nothing to create in Stitch. Ask Antigravity:
 > *"Deploy the existing web with `./deploy.sh` and mark it as the baseline with `./mark-baseline.sh`."*
 
 Check the live URL printed by `deploy.sh`:

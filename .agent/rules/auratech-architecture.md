@@ -2,7 +2,7 @@
 
 ## 0. Placeholders & Credentials Policy (READ FIRST)
 - This repository ships WITHOUT personal information. The only user-specific value is the placeholder `<YOUR_GCP_PROJECT_ID>` (set with `./configure.sh`).
-- **Stitch needs NO configuration**: this repository uses the shared Stitch project `16569938020139710589` with design system `assets/5733f6b3f4ab4766ab180fc8f0b95aea` (AuraTech Hardware). Never create a new Stitch project or design system and never ask the user for Stitch IDs; only the Stitch API key lives in the user's local `mcp_config.json` (README Step 2).
+- **Stitch needs NO configuration**: this repository uses the shared Stitch project `7029395595404356083` with design system `assets/5733f6b3f4ab4766ab180fc8f0b95aea` (AuraTech Hardware). Never create a new Stitch project or design system and never ask the user for Stitch IDs; only the Stitch API key lives in the user's local `mcp_config.json` (README Step 2).
 - **Jira needs NO configuration**: the user's Jira MCP is already connected in Antigravity. `{TICKET_KEY}` below is NOT a placeholder to fill; it is the key of the Jira ticket you discover at runtime (Section 2). Never ask the user for a Jira project key or ticket key.
 - Before using any of them, check whether it is still an unfilled `<YOUR_...>` placeholder. If it is, STOP and ask the user for their own value, pointing to README Step 4 (Google Cloud). Never invent IDs. Once the user provides it, save it with `./configure.sh --set GCP_PROJECT_ID=<id>`. This stores the value outside the repo (`~/.auratech/`) and fills `.agent/rules/`, `.agent/skills/`, the `Dockerfile` and the scripts. Do not hand-edit placeholders and never commit the filled values.
 - NEVER write credentials into the repository: no Jira/Atlassian tokens, no Stitch API keys, no OAuth tokens, no personal emails or account names. Credentials live only in the user's local Antigravity `mcp_config.json` and in `gcloud`. If a connection fails, give the user the how-to from the README and ask them to fix it with their own account.
@@ -19,7 +19,7 @@ You are working in the **AuraTech — Official Google Hardware Partner** web app
 - **Google Cloud project**: `<YOUR_GCP_PROJECT_ID>`
 - **Jira**: via the user's Jira MCP (no config). Ticket `{TICKET_KEY}` = the assigned ticket whose summary contains "Google Fitbit Air Challenge" (created from `docs/JIRA_TICKET.md`)
 - **Cloud Run Service**: `partner-forum-2026-dryrun` (deployed via `./deploy.sh`)
-- **Google Stitch `projectId` (for this repository)**: `"16569938020139710589"`
+- **Google Stitch `projectId` (for this repository)**: `"7029395595404356083"`
 - **Google Stitch `designSystem` (for this repository)**: `"assets/5733f6b3f4ab4766ab180fc8f0b95aea"` (AuraTech Hardware)
 - **Google Stitch `modelId`**: `"GEMINI_3_8_FLASH"`
 - **`main.py`**: Core FastAPI server hosting the Storefront (`GET /`) and Live Audience Role Poll (`GET /poll`, `GET /vote`, `GET /admin`, `GET /api/qr`). Automatically mounts `campaign_router.py` if present.
@@ -43,7 +43,7 @@ Whenever the user asks you to work on the assigned Jira ticket (`{TICKET_KEY}` /
 1. **Transition Jira Ticket to `In Progress`**: Call the Atlassian / Jira MCP (`getTransitionsForJiraIssue` -> `transitionJiraIssue`) to move `{TICKET_KEY}` to **`In Progress`**.
 2. Read `.agent/skills/frontend-skill/SKILL.md` and inspect the `<head>`, `<header>`, and `<footer>` of `templates/poll.html` and `templates/index.html`.
 3. Call the **Google Stitch MCP** tool `generate_screen_from_text` using:
-   - `projectId`: `"16569938020139710589"`
+   - `projectId`: `"7029395595404356083"`
    - `designSystem`: `"assets/5733f6b3f4ab4766ab180fc8f0b95aea"`
    - `deviceType`: `"DESKTOP"`
    - `modelId`: `"GEMINI_3_8_FLASH"`

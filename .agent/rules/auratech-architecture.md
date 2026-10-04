@@ -1,16 +1,18 @@
 # AuraTech Workspace Architecture, Jira Lifecycle & Speed Execution Rules
 
 ## 0. Placeholders & Credentials Policy (READ FIRST)
-- This repository ships WITHOUT personal information. The only user-specific value is the placeholder `<YOUR_GCP_PROJECT_ID>` (set with `./configure.sh`).
-- **Stitch needs NO configuration**: this repository uses the shared Stitch project `7029395595404356083` with design system `assets/5733f6b3f4ab4766ab180fc8f0b95aea` (AuraTech Hardware). Never create a new Stitch project or design system and never ask the user for Stitch IDs; only the Stitch API key lives in the user's local `mcp_config.json` (README Step 2).
-- **Stitch hard-stop (no silent fallback)**: before `generate_screen_from_text`, run the pre-flight `get_project` with `name: "projects/7029395595404356083"`. If it (or the generation) fails with *permission denied* / *not found*, STOP immediately and tell the user: (a) run `git pull` (a stale checkout may carry an old project ID) and (b) make sure the Google account that created the Stitch API key in `mcp_config.json` has access to the shared project (README → Troubleshooting). NEVER call `create_project`, NEVER use `list_projects` to pick another project, NEVER generate in any `projectId` other than `7029395595404356083`, even if the user says "just continue" — ask them to fix access first.
+- This repository ships WITHOUT personal information. The user-specific values are the `<YOUR_...>` placeholders for `GCP_PROJECT_ID`, `STITCH_PROJECT_ID` and `STITCH_DESIGN_SYSTEM_ID` (filled by `./configure.sh`, stored in `~/.auratech/`, never committed).
+- **Stitch = the user's OWN project**: `<YOUR_STITCH_PROJECT_ID>` is the Stitch project the user created in the Stitch UI (README Step 2). Never ask for or use anybody else's project. Only the Stitch API key lives in the user's local `mcp_config.json`.
+- **Stitch design system bootstrap (first run only)**: if `STITCH_DESIGN_SYSTEM_ID` is not set yet (the `designSystem` value in Section 1 still reads as an unfilled `<YOUR_...>` placeholder / `./configure.sh --show` says `<empty>`), create it from the repository's `DESIGN.md` before any screen generation: (1) `upload_design_md` with `projectId` = `<YOUR_STITCH_PROJECT_ID>` and `designMdBase64` = base64 of `DESIGN.md`; (2) `create_design_system_from_design_md` with the `selectedScreenInstance` returned by step 1; (3) read the new design system id (`assets/...`) from the response or `get_project`, save it with `./configure.sh --set STITCH_DESIGN_SYSTEM_ID=assets/...`, and continue with the filled value. Then, if the project has no screens yet, generate the two baseline context screens with `generate_screen_from_text` (design system = the new id, `deviceType` `DESKTOP`): *"AuraTech storefront: header `AuraTech` wordmark + nav Store | Fitbit | Wearables | Accessories | Live Role Poll | Support, hero for Google Fitbit Air, 3-column product grid, minimal footer"* and *"AuraTech Live Role Poll: same header, PARTNER FORUM 2026 eyebrow, QR card, horizontal bar results, minimal footer"*. Never call `create_project` and never create a second design system once one is saved.
+- **Stitch hard-stop (no silent fallback)**: before `generate_screen_from_text`, run the pre-flight `get_project` with `name: "projects/<YOUR_STITCH_PROJECT_ID>"`. If it (or the generation) fails with *permission denied* / *not found*, STOP immediately and tell the user: (a) run `git pull` (a stale checkout may carry an old project ID) and (b) make sure `STITCH_PROJECT_ID` (`./configure.sh --show`) is the project of the SAME Google account that created the Stitch API key in `mcp_config.json` (README → Troubleshooting). NEVER call `create_project`, NEVER use `list_projects` to pick another project, NEVER generate in any `projectId` other than `<YOUR_STITCH_PROJECT_ID>`, even if the user says "just continue" — ask them to fix access first.
 - **Jira needs NO configuration**: the user's Jira MCP is already connected in Antigravity. `{TICKET_KEY}` below is NOT a placeholder to fill; it is the key of the Jira ticket you discover at runtime (Section 2). Never ask the user for a Jira project key or ticket key.
-- Before using any of them, check whether it is still an unfilled `<YOUR_...>` placeholder. If it is, STOP and ask the user for their own value, pointing to README Step 4 (Google Cloud). Never invent IDs. Once the user provides it, save it with `./configure.sh --set GCP_PROJECT_ID=<id>`. This stores the value outside the repo (`~/.auratech/`) and fills `.agent/rules/`, `.agent/skills/`, the `Dockerfile` and the scripts. Do not hand-edit placeholders and never commit the filled values.
+- Before using any of them, check whether it is still an unfilled `<YOUR_...>` placeholder. If it is, STOP and ask the user for their own value, pointing to README Step 2 (Stitch) or Step 4 (Google Cloud) — except `<YOUR_STITCH_DESIGN_SYSTEM_ID>`, which you bootstrap yourself (above). Never invent IDs. Once the user provides it, save it with `./configure.sh --set GCP_PROJECT_ID=<id>`. This stores the value outside the repo (`~/.auratech/`) and fills `.agent/rules/`, `.agent/skills/`, the `Dockerfile` and the scripts. Do not hand-edit placeholders and never commit the filled values.
 - NEVER write credentials into the repository: no Jira/Atlassian tokens, no Stitch API keys, no OAuth tokens, no personal emails or account names. Credentials live only in the user's local Antigravity `mcp_config.json` and in `gcloud`. If a connection fails, give the user the how-to from the README and ask them to fix it with their own account.
 
 ### README bootstrap tasks (when the user asks for them)
 - **Step 1 — Create the Jira ticket** (only if the user asks): list the user's Jira projects via the Jira MCP; if there is exactly one use it, otherwise ask which one. Create an issue with the Summary and Description of `docs/JIRA_TICKET.md`, assign it to the current user (status To Do). Nothing to save: the ticket is discovered at runtime.
-- **Step 5 — Baseline deploy**: run `./deploy.sh` and `./mark-baseline.sh`, then verify `/` 200, `/poll` 200, `/campaign` 404. The Stitch project is already configured (shared); do NOT create one.
+- **Step 2 — Stitch bootstrap** (when the user says *"bootstrap my Stitch project"* or on the first ticket run): apply the design-system bootstrap above.
+- **Step 5 — Baseline deploy**: run `./deploy.sh` and `./mark-baseline.sh`, then verify `/` 200, `/poll` 200, `/campaign` 404.
 
 ---
 
@@ -20,8 +22,8 @@ You are working in the **AuraTech — Official Google Hardware Partner** web app
 - **Google Cloud project**: `<YOUR_GCP_PROJECT_ID>`
 - **Jira**: via the user's Jira MCP (no config). Ticket `{TICKET_KEY}` = the assigned ticket whose summary contains "Google Fitbit Air Challenge" (created from `docs/JIRA_TICKET.md`)
 - **Cloud Run Service**: `partner-forum-2026-dryrun` (deployed via `./deploy.sh`)
-- **Google Stitch `projectId` (for this repository)**: `"7029395595404356083"`
-- **Google Stitch `designSystem` (for this repository)**: `"assets/5733f6b3f4ab4766ab180fc8f0b95aea"` (AuraTech Hardware)
+- **Google Stitch `projectId` (for this repository)**: `"<YOUR_STITCH_PROJECT_ID>"`
+- **Google Stitch `designSystem` (for this repository)**: `"<YOUR_STITCH_DESIGN_SYSTEM_ID>"`
 - **Google Stitch `modelId`**: `"GEMINI_3_8_FLASH"`
 - **`main.py`**: Core FastAPI server hosting the Storefront (`GET /`) and Live Audience Role Poll (`GET /poll`, `GET /vote`, `GET /admin`, `GET /api/qr`). Automatically mounts `campaign_router.py` if present.
 - **`templates/index.html`**: AuraTech Google Hardware Storefront (`Store | Fitbit | Wearables | Accessories | Live Role Poll | Support`).
@@ -43,10 +45,10 @@ Whenever the user asks you to work on the assigned Jira ticket (`{TICKET_KEY}` /
 ### Phase 1: Move Jira to `In Progress`, Design in Google Stitch & Pause for Visual Approval (`frontend-skill` — Phase 1)
 1. **Transition Jira Ticket to `In Progress`**: Call the Atlassian / Jira MCP (`getTransitionsForJiraIssue` -> `transitionJiraIssue`) to move `{TICKET_KEY}` to **`In Progress`**.
 2. Read `.agent/skills/frontend-skill/SKILL.md` and inspect the `<head>`, `<header>`, and `<footer>` of `templates/poll.html` and `templates/index.html`.
-3. **Pre-flight**: call the Stitch MCP `get_project` with `name: "projects/7029395595404356083"` and confirm the response lists design system `assets/5733f6b3f4ab4766ab180fc8f0b95aea`. On any error → STOP and apply the *Stitch hard-stop* rule from Section 0 (no `create_project`, no other `projectId`).
+3. **Pre-flight**: call the Stitch MCP `get_project` with `name: "projects/<YOUR_STITCH_PROJECT_ID>"` and confirm the response lists design system `<YOUR_STITCH_DESIGN_SYSTEM_ID>`. On any error → STOP and apply the *Stitch hard-stop* rule from Section 0 (no `create_project`, no other `projectId`).
 4. Call the **Google Stitch MCP** tool `generate_screen_from_text` using:
-   - `projectId`: `"7029395595404356083"`
-   - `designSystem`: `"assets/5733f6b3f4ab4766ab180fc8f0b95aea"`
+   - `projectId`: `"<YOUR_STITCH_PROJECT_ID>"`
+   - `designSystem`: `"<YOUR_STITCH_DESIGN_SYSTEM_ID>"`
    - `deviceType`: `"DESKTOP"`
    - `modelId`: `"GEMINI_3_8_FLASH"`
    - Exact prompt from `.agent/skills/frontend-skill/SKILL.md` (preserving the exact AuraTech TopNavBar: `Store | Fitbit | Wearables | Accessories | Live Role Poll | Fitbit Campaign | Support` with NO dark top announcement bar and NO `"Catalog"` or `"Community Poll"` links).

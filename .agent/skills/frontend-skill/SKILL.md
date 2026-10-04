@@ -19,15 +19,16 @@ Use this skill whenever designing and building the frontend for the **Fitbit Emp
 ### Step 1.1: Inspect `templates/poll.html` and `templates/index.html`
 Read `templates/poll.html` (lines 1–165 and 275–295) and `templates/index.html` (lines 115–150) so you have the exact AuraTech `<head>` Tailwind configuration, `<header>` TopNavBar structure, and `<footer>`.
 
-### Step 1.2: Pre-flight — verify access to the shared Stitch project
-Call `get_project` with `name: "projects/7029395595404356083"`. The response must succeed and list the design system `assets/5733f6b3f4ab4766ab180fc8f0b95aea`.
-If it fails (*permission denied*, *not found*): **STOP**. Tell the user to `git pull` (stale project ID) and to verify that the Google account that generated the Stitch API key in `mcp_config.json` can open the shared project (README → Troubleshooting). Do NOT call `create_project`, do NOT pick another project via `list_projects`, do NOT generate anywhere other than `7029395595404356083`.
+### Step 1.2: Pre-flight — verify the user's Stitch project and design system
+If `STITCH_DESIGN_SYSTEM_ID` is not set yet (the design system value below still reads as an unfilled `<YOUR_...>` placeholder), run the design-system bootstrap from `.agent/rules/auratech-architecture.md` Section 0 first (upload `DESIGN.md`, create the design system, save it with `./configure.sh --set STITCH_DESIGN_SYSTEM_ID=...`).
+Call `get_project` with `name: "projects/<YOUR_STITCH_PROJECT_ID>"`. The response must succeed and list the design system `<YOUR_STITCH_DESIGN_SYSTEM_ID>`.
+If it fails (*permission denied*, *not found*): **STOP**. Tell the user to check `./configure.sh --show` (`STITCH_PROJECT_ID` must be a project of the same Google account that generated the Stitch API key in `mcp_config.json`, README → Troubleshooting). Do NOT call `create_project`, do NOT pick another project via `list_projects`, do NOT generate anywhere other than `<YOUR_STITCH_PROJECT_ID>`.
 
 ### Step 1.3: Call Google Stitch MCP (`generate_screen_from_text`)
 Call `generate_screen_from_text` using the Stitch project for this repository:
 
-- **`projectId`**: `"7029395595404356083"`
-- **`designSystem`**: `"assets/5733f6b3f4ab4766ab180fc8f0b95aea"` (AuraTech Hardware)
+- **`projectId`**: `"<YOUR_STITCH_PROJECT_ID>"`
+- **`designSystem`**: `"<YOUR_STITCH_DESIGN_SYSTEM_ID>"`
 - **`deviceType`**: `"DESKTOP"`
 - **`modelId`**: `"GEMINI_3_8_FLASH"`
 - **`prompt`**:
